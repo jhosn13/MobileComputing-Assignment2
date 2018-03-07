@@ -1,6 +1,7 @@
 package com.example.jadhosn.app9;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -121,8 +122,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         viewport.setScrollable(true);
         //Creating Input as LineGraphSeries before feeding the data into the graph
         input = new LineGraphSeries<>();
+        input.setColor(Color.RED);
         input1 = new LineGraphSeries<>();
+        input1.setColor(Color.GREEN);
         input2 = new LineGraphSeries<>();
+        input2.setColor(Color.BLUE);
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(40);
         graph.getViewport().setXAxisBoundsManual(true);
