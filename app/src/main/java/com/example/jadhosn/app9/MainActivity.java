@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public LineGraphSeries<DataPoint> input1;
     public LineGraphSeries<DataPoint> input2;
 
-    private double lastX = 5d;
+    private double lastX = 0d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,10 +220,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 input.appendData(new DataPoint(lastX, deltaX), true, 1000);
                 input1.appendData(new DataPoint(lastX, deltaY), true, 1000);
                 input2.appendData(new DataPoint(lastX, deltaZ), true, 1000);
-                hndlr.postDelayed(this, 250);
+                hndlr.postDelayed(this, 1000);
             }
         };
-        hndlr.postDelayed(runn, 250);
+        hndlr.postDelayed(runn, 1000);
     }
 
     public void stop()
