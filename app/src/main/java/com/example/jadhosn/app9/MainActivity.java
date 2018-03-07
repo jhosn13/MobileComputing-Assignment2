@@ -25,6 +25,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
+    //Database Helper Class - Initial Call
     DatabaseHelper myDb;
     EditText text;
 
@@ -38,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     GraphView graph;
 
-    //--------------------------------------------------
+    //-----------------------------------------------------
+    //Accelerometer Initialization Variables
     private float slastX, slastY, slastZ;
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -48,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float deltaZ = 0;
     private TextView currentX, currentY, currentZ;
 
-    //--------------------------------------------------
-
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    //-----------------------------------------------------
 
     private static final Random rnd = new Random();
     public LineGraphSeries<DataPoint> input;
@@ -57,14 +60,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public LineGraphSeries<DataPoint> input2;
 
     private double lastX = 5d;
-
-
-    //------------------------------------------------
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-    //------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,20 +80,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+
         //---------------------------------------------------------------
-        initializeViews();
+        // Accelerometer Code
+        currentX = (TextView) findViewById(R.id.currentX);
+        currentY = (TextView) findViewById(R.id.currentY);
+        currentZ = (TextView) findViewById(R.id.currentZ);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null)
+        {
             // success! we have an accelerometer
-
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        } else {
-            // fai! we dont have an accelerometer!
+        } else
+        {
+            // fail! we dont have an accelerometer!
         }
-
         //------------------------------------------------------------------------
+
+
         //Start Button Listener
         Start = (Button)findViewById(R.id.Start);
         Start.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
         gridLabel.setHorizontalAxisTitle("Time");
-        gridLabel.setVerticalAxisTitle("ECG");
+        gridLabel.setVerticalAxisTitle("Accelerometer");
+
 
         /*
         viewport.setXAxisBoundsManual(true);
@@ -147,28 +149,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         viewport.setMinY(0);
         */
     }
-    //------------------------------------------------------------------------
 
-    // ------------------------------------------------------------------------
-        public void initializeViews() {
-            currentX = (TextView) findViewById(R.id.currentX);
-            currentY = (TextView) findViewById(R.id.currentY);
-            currentZ = (TextView) findViewById(R.id.currentZ);
-        }
-    //------------------------------------------------------------------------
+    //onResume() register the accelerometer for listening the events
+    protected void onResume(){
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
-    //------------------------------------------------------------------------
-        //onResume() register the accelerometer for listening the events
-        protected void onResume(){
-            super.onResume();
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        }
-
-        //onPause() unregister the accelerometer for stop listening the events
-        protected void onPause(){
-            super.onPause();
-            sensorManager.unregisterListener(this);
-        }
+    //onPause() unregister the accelerometer for stop listening the events
+    protected void onPause(){
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
