@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public LineGraphSeries<DataPoint> input1;
     public LineGraphSeries<DataPoint> input2;
 
-    //private double lastX = 5d;
+    private double lastX = 5d;
 
 
     //------------------------------------------------
@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         viewport.setScrollable(true);
         //Creating Input as LineGraphSeries before feeding the data into the graph
         input = new LineGraphSeries<>();
+        input1 = new LineGraphSeries<>();
+        input2 = new LineGraphSeries<>();
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(40);
         graph.getViewport().setXAxisBoundsManual(true);
@@ -209,6 +211,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void start() {
         //Feed input data to Graph
         graph.addSeries(input);
+        graph.addSeries(input1);
+        graph.addSeries(input2);
+
         //Run callback for runnable
         super.onStart();
         runn = new Runnable() {
@@ -216,8 +221,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void run() {
                 //input.resetData(generateData());
 
-                //lastX+=1d;//Incremental X value for the graph to keep scrolling
-                input.appendData(new DataPoint(deltaY, rndGen()), true, 100);
+                lastX+=1d;//Incremental X value for the graph to keep scrolling
+                input.appendData(new DataPoint(lastX, deltaX), true, 1000);
+                input1.appendData(new DataPoint(lastX, deltaY), true, 1000);
+                input2.appendData(new DataPoint(lastX, deltaZ), true, 1000);
                 hndlr.postDelayed(this, 250);
             }
         };
