@@ -199,8 +199,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void LoadDB(){
         //Add new table for each patient
         myDb.addTable(text.getText().toString());
-        //Insert sensor data
-        myDb.insertData(text.getText().toString(),"1", deltaX,deltaY,deltaZ);
     }
 
     //Called on Start Button
@@ -218,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //input.resetData(generateData());
 
                 lastX+=1d;//Incremental X value for the graph to keep scrolling
+                myDb.insertData(text.getText().toString(),Double.toString(lastX), deltaX,deltaY,deltaZ);
                 input.appendData(new DataPoint(lastX, deltaX), true, 1000);
                 input1.appendData(new DataPoint(lastX, deltaY), true, 1000);
                 input2.appendData(new DataPoint(lastX, deltaZ), true, 1000);
