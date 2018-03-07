@@ -14,8 +14,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static final String DB_name = "app9.db";
 
 
+
     //Table Creation - depends on user input
-    public static final String TABLE_PATIENT = "VAR";
+    public static String TABLE_PATIENT = "";
     public static final String COLUMN_PATIENT_TIME = "time";
     public static final String COLUMN_PATIENT_X = "X";
     public static final String COLUMN_PATIENT_Y = "Y";
@@ -30,9 +31,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             +COLUMN_PATIENT_Z+" FLOAT NOT NULL "
             +");";
 
-    public DatabaseHelper(Context context)
+    public DatabaseHelper(Context context, String name)
     {
         super(context, DB_name, null,1);
+        TABLE_PATIENT = name;
     }
 
     @Override
