@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
@@ -17,6 +18,10 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Database helper initial call
+    DatabaseHelper myDb;
+    EditText text;
+
 
     private final Handler hndlr = new Handler();
 
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button Start;
     Button Stop;
+    Button Load;
 
     GraphView graph;
 
@@ -37,6 +43,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Database onCreate Call
+        myDb = new DatabaseHelper(this);
+        text = (EditText) findViewById(R.id.text);
+
+        //LoadDB Button Listener
+        Load = (Button)findViewById(R.id.load);
+        Load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoadDB();
+            }
+        });
+
+
         //Start Button Listener
         Start = (Button)findViewById(R.id.Start);
         Start.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 start();
             }
         });
+
+
         //Stop Button Listener
         Stop = (Button)findViewById(R.id.stop);
         Stop.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 stop();
             }
         });
+
+
         //Graph Definition
         graph = (GraphView) findViewById(R.id.graph);
         //Graph Properties Defined
@@ -69,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         gridLabel.setHorizontalAxisTitle("Time");
         gridLabel.setVerticalAxisTitle("ECG");
 
+
         /*
         viewport.setXAxisBoundsManual(true);
         viewport.setMinX(0);
@@ -80,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
         viewport.setMinY(0);
         */
     }
+
+    public void LoadDB(){
+        //Add new table for each patient
+        myDb.addTable(text.getText().toString());
+        //Insert sensor data
+        myDb.insertData(text.getText().toString(),"1", 1.3,1.4,1.5);
+    }
+
+
     //Called on Start Button
     public void start() {
         //Feed input data to Graph
@@ -97,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         hndlr.postDelayed(runn, 250);
+
     }
 
     public void stop()
