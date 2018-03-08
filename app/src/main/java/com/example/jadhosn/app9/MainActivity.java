@@ -20,7 +20,18 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import static com.example.jadhosn.app9.DatabaseHelper.DB_name;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
@@ -250,7 +261,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void upload_db()
     {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
+                String path = "/storage/emulated/0/Android/data/CSE535_ASSIGNMENT2/app9.db";
+                File database  = new File(path);
+
+                OkHttpClient client = new OkHttpClient();
+                RequestBody fb = RequestBody.create(MediaType.parse("db"),database);
+
+                RequestBody rb = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("type","db")
+                        .addFormDataPart("uploaded_file",DB_name, fb)
+                        .build();
+
+                Request res = new Request.Builder()
+                        .url("http://impact.asu.edu/CSE535Spring18Folder/UploadToServer.php")
+                        .post(rb)
+                        .build();
+
+                try {
+                    Response response = client.newCall(res).execute();
+
+                    if(!response.isSuccessful()){
+                        throw new IOException("Error : "+response);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        t.start();
     }
 
 }
