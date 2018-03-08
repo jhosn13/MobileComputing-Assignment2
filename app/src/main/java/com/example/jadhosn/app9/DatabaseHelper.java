@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+
+import java.io.File;
 
 /**
  * Created by JadHosn on 3/5/18.
@@ -31,7 +34,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     public DatabaseHelper(Context context)
     {
-        super(context, DB_name, null,1);
+        super(context, Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Android"+ File.separator+ "Data"+File.separator+ "CSE535_ASSIGNMENT2"+File.separator +DB_name, null,2);
+        //"data"+ File.separator+"CSE535_ASSIGNMENT2"+File.separator+
+
     }
 
     @Override

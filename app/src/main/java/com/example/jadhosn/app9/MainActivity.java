@@ -7,7 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,10 +20,6 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 import java.util.Random;
 
 
@@ -72,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         //Database onCreate Call
         myDb = new DatabaseHelper(this);
         text = (EditText) findViewById(R.id.text);
@@ -91,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save_data();
+                upload_db();
             }
         });
 
@@ -254,36 +248,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return rndInit += rnd.nextDouble()*0.4;
     }
 
-    public void save_data()
+    public void upload_db()
     {
-
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state))
-        {
-            try {
-
-                File edir = Environment.getExternalStorageDirectory();
-                File dir = Environment.getDataDirectory();
-
-                if (edir.canWrite()) {
-                    String currentDBPath = "/sdcard/Android/data";
-                    String backupDBPath = "app9.db";
-                    File currentDB = new File(dir, currentDBPath);
-                    File backupDB = new File(edir, backupDBPath);
-
-                    if (currentDB.exists()) {
-                        FileChannel src = new FileInputStream(currentDB).getChannel();
-                        FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                        dst.transferFrom(src, 0, src.size());
-                        src.close();
-                        dst.close();
-                    }
-                }
-            }
-            catch (Exception e) {}
-        }
-
-
 
     }
 
