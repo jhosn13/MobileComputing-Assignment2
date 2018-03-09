@@ -15,27 +15,28 @@
         android:layout_height="300dp" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:text="Start"
         android:id="@+id/Start"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="54dp" />
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="5dp" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:text="Stop"
         android:id="@+id/stop"
         android:layout_alignTop="@+id/Start"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginStart="70dp"/>
 
-     <TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"
+        android:layout_marginStart="130dp"
         android:layout_marginTop="300dp"
         android:text="Accelerometer:"
         android:textSize="20dp" />
@@ -45,7 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="325dp"
+        android:layout_marginStart="130dp"
         android:text="X-Axis"
         android:textSize="15dp" />
 
@@ -55,7 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"
-        android:layout_marginTop="370dp"
+        android:layout_marginTop="342dp"
+        android:layout_marginStart="130dp"
         android:text="0.0"
         android:textSize="15dp" />
 
@@ -64,7 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"
-        android:layout_marginTop="395dp"
+        android:layout_marginTop="325dp"
+        android:layout_marginStart="190dp"
         android:text="Y-Axis"
         android:textSize="15dp" />
 
@@ -74,7 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"
-        android:layout_marginTop="410dp"
+        android:layout_marginTop="342dp"
+        android:layout_marginStart="190dp"
         android:text="0.0"
         android:textSize="15dp" />
 
@@ -83,7 +88,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="100dp"
-        android:layout_marginTop="435dp"
+        android:layout_marginTop="325dp"
+        android:layout_marginStart="250dp"
         android:text="Z-Axis"
         android:textSize="15dp" />
 
@@ -92,42 +98,108 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="342dp"
         android:layout_marginBottom="100dp"
+        android:layout_marginStart="250dp"
         android:text="0.0"
         android:textSize="15dp" />
 
     <Button
         android:id="@+id/load"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="137dp"
-        android:layout_marginTop="520dp"
-        android:text="Load DB" />
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="370dp"
+        android:text="Enter" />
 
     <EditText
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+        android:id="@+id/Name"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="470dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="300dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
+        android:inputType="textPersonName|textCapWords"
+        android:text="Name"
+        />
+
+    <EditText
+        android:id="@+id/ID"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="343dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="ID"
+        />
+
+    <EditText
+        android:id="@+id/Age"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="386dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="Age"
+        />
+
 
     <Button
         android:id="@+id/upload"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="262dp"
-        android:layout_marginTop="540dp"
-        android:text="Upload" />
+        android:layout_marginStart="250dp"
+        android:layout_marginTop="426dp"
+        android:text="Upload"/>
 
+    <Button
+        android:id="@+id/download"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="426dp"
+        android:text="Download" />
+
+    <RadioGroup android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="370dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginEnd="8dp">
+
+        <RadioButton
+            android:id="@+id/radio_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="Male"
+            android:onClick="onRadioButtonClicked"
+            />
+
+        <RadioButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/radio_female"
+            android:text="Female"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked"
+            />
+
+    </RadioGroup>
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -38,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     //Database Helper Class - Initial Call
     DatabaseHelper myDb;
-    EditText text;
+    EditText Name, Age, ID;
+    String table_name;
+    String sex;
 
     private final Handler hndlr = new Handler();
 
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button Stop;
     Button Load;
     Button Upload;
+
+    //RadioButton male, female;
 
     GraphView graph;
 
@@ -78,9 +83,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Permissions
+        /*
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},9);
+                return;
+            }
+        }
+        */
+
         //Database onCreate Call
         myDb = new DatabaseHelper(this);
-        text = (EditText) findViewById(R.id.text);
+        Name = (EditText) findViewById(R.id.Name);
+        Age = (EditText) findViewById(R.id.Age);
+        ID = (EditText) findViewById(R.id.ID);
 
         //LoadDB Button Listener
         Load = (Button)findViewById(R.id.load);
@@ -218,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //-----------------------------------------------------------------------------
 
     public void LoadDB(){
-        //Add new table for each patient
-        myDb.addTable(text.getText().toString());
+        table_name = Name.getText().toString() +"_"+ID.getText().toString() +"_"+ Age.getText().toString()+"_"+sex;
+        myDb.addTable(table_name);
     }
 
     //Called on Start Button
@@ -237,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //input.resetData(generateData());
 
                 lastX+=1d;//Incremental X value for the graph to keep scrolling
-                myDb.insertData(text.getText().toString(),Double.toString(lastX), deltaX,deltaY,deltaZ);
+                myDb.insertData(table_name,Double.toString(lastX), deltaX,deltaY,deltaZ);
                 input.appendData(new DataPoint(lastX, deltaX), true, 1000);
                 input1.appendData(new DataPoint(lastX, deltaY), true, 1000);
                 input2.appendData(new DataPoint(lastX, deltaZ), true, 1000);
@@ -296,6 +313,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
         t.start();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_male:
+                if (checked)
+                    sex = "Male";
+                break;
+            case R.id.radio_female:
+                if (checked)
+                    sex = "Female";
+                break;
+        }
     }
 
 }
