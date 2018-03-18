@@ -6,7 +6,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,7 +24,13 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
 import okhttp3.MediaType;
@@ -314,6 +322,59 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         t.start();
     }
+
+    public void download_db()
+    {
+        String serverPath = "http://impact.asu.edu/CSE535Spring18Folder/app9.db";
+        final Download download = new Download();
+        download.execute(serverPath);
+    }
+
+    public class Download extends AsyncTask<String, Integer, String>{
+
+        protected void onPreExecute() {super.onPreExecute();}
+
+        @Override
+        protected String doInBackground(String... sURL) {
+            InputStream IS = null;
+            OutputStream OS = null;
+            HttpURLConnection HTTPcon = null;
+
+            try {
+                URL url = new URL(sURL[0]);
+                HTTPcon = (HttpURLConnection) url.openConnection();
+                HTTPcon.connect();
+                if (HTTPcon.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    final File file = new File(Environment.getExternalStorageDirectory()+"/storage/emulated/0/Android/data/CSE535_ASSIGNMENT2_DOWN");
+                    if (!file.exists()){
+                        file.mkdirs();
+                    }
+                    OS = new FileOutputStream(file +"");
+                    byte data[] = new byte[2048];
+                    int c = 0;
+                    while((c = IS.read(data)) != -1){
+                        OS.write(data,0,c);
+                    }
+                    OS.flush();
+                    OS.close();
+                    IS.close();
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        finally {
+                if (HTTPcon != null){
+                    HTTPcon.disconnect();
+                }
+            }
+            return null;
+        }
+    }
+
+
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
