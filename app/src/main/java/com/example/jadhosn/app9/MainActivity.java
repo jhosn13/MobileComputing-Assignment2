@@ -1,6 +1,8 @@
 package com.example.jadhosn.app9;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,9 +31,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 
 import okhttp3.MediaType;
@@ -349,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (!file.exists()){
                         file.mkdirs();
                     }
-                    OS = new FileOutputStream(file +"");
+                    OS = new FileOutputStream(file +"/Group9db");
                     byte data[] = new byte[2048];
                     int c = 0;
                     while((c = IS.read(data)) != -1){
@@ -371,6 +376,89 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
             return null;
+        }
+    }
+    public int axis(){
+        Log.d("list", "hello");
+        switch (acc_Axis.getCheckedRadioButtonId()){
+            case R.id.xaxis:
+                Axis_type = 0;
+                break;
+            case R.id.yaxis:
+                Axis_type = 0;
+                break;
+            case R.id.zaxis:
+                Axis_type = 0;
+                break;
+        }
+        return Axis_type;
+    }
+    public Handler handler = handleMessage(msg) {
+        switch (msg.what){
+            case 0*01:
+                DB_name = Environment.getExternalStorageDirectory()+"/storage/emulated/0/Android/data/CSE535_ASSIGNMENT2_DOWN//Group9db";
+                patientDatabase = new patientDatabase(getApplicationContext(), DB_name);
+                String tablename = table_name();
+                Log.d("listRRR",tableName);
+                float[][] sensorvalues = patientDatabase.retrieveData(tablename);
+                int Axis = axis();
+                Log.d("type", Integer.toString(Axis));
+                Log.d("listRRR", Arrays.toString(sensorvalues[Axis]));
+                float[] temp = sensorvalues[Axis];
+                Log.d("array", Arrays.toString(temp));
+                for(i = 0; i< 10; i++){
+                    float testValue = temp[i];
+                    setGraph(testValue);
+                }
+                flag = true;
+                break;
+
+        }
+    }
+
+    public float[][] retreiveData(String tablename){
+        Log.d("list", "Retreived!");
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sqlSelectQuery = "Select * FROM " + tablename + "ORDER BY timestamp DESC LIMIT 10";
+        float[] xval = new float[10], yval = new float[10], zval = new float[10];
+        int i =0;
+        Cursor cursor = db.rawQuery(sqlSelectQuery, null);
+        if (cursor.moveToFirst()){
+            while (cursor.moveToNext()){
+                String x= cursor.getString(cursor.getColumnIndex("x_values"));
+                String y= cursor.getString(cursor.getColumnIndex("y_values"));
+                String z= cursor.getString(cursor.getColumnIndex("z_values"));
+
+                xval[i] = Float.parseFloat(x);
+                yval[i] = Float.parseFloat(y);
+                zval[i] = Float.parseFloat(z);
+
+                Log.d("listiii", Float.toString(xval[i]));
+                Log.d("listiiii", Float.toString(yval[i]));
+                Log.d("listiiii", Float.toString(zval[i]));
+                i++;
+
+
+            }
+            db.close();
+        }
+        return new float[][]{xval,yval,zval};
+
+    }
+
+    public Thread movingGraph = run(){
+        try{
+            while(run){
+                handler.sendEmptyMessage(0*01);
+                Thread.sleep(1000);
+                synchronized (this){
+                    while(flag){
+                        // wait();
+                    }
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
