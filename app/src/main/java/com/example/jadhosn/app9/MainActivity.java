@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -328,139 +329,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         t.start();
     }
 
-    public void download_db()
-    {
-        String serverPath = "http://impact.asu.edu/CSE535Spring18Folder/app9.db";
-        final Download download = new Download();
-        download.execute(serverPath);
-    }
-
-    public class Download extends AsyncTask<String, Integer, String>{
-
-        protected void onPreExecute() {super.onPreExecute();}
-
-        @Override
-        protected String doInBackground(String... sURL) {
-            InputStream IS = null;
-            OutputStream OS = null;
-            HttpURLConnection HTTPcon = null;
-
-            try {
-                URL url = new URL(sURL[0]);
-                HTTPcon = (HttpURLConnection) url.openConnection();
-                HTTPcon.connect();
-                if (HTTPcon.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    final File file = new File(Environment.getExternalStorageDirectory()+"/storage/emulated/0/Android/data/CSE535_ASSIGNMENT2_DOWN");
-                    if (!file.exists()){
-                        file.mkdirs();
-                    }
-                    OS = new FileOutputStream(file +"/Group9db");
-                    byte data[] = new byte[2048];
-                    int c = 0;
-                    while((c = IS.read(data)) != -1){
-                        OS.write(data,0,c);
-                    }
-                    OS.flush();
-                    OS.close();
-                    IS.close();
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        finally {
-                if (HTTPcon != null){
-                    HTTPcon.disconnect();
-                }
-            }
-            return null;
-        }
-    }
-    public int axis(){
-        Log.d("list", "hello");
-        switch (acc_Axis.getCheckedRadioButtonId()){
-            case R.id.xaxis:
-                Axis_type = 0;
-                break;
-            case R.id.yaxis:
-                Axis_type = 0;
-                break;
-            case R.id.zaxis:
-                Axis_type = 0;
-                break;
-        }
-        return Axis_type;
-    }
-    public Handler handler = handleMessage(msg) {
-        switch (msg.what){
-            case 0*01:
-                DB_name = Environment.getExternalStorageDirectory()+"/storage/emulated/0/Android/data/CSE535_ASSIGNMENT2_DOWN//Group9db";
-                patientDatabase = new patientDatabase(getApplicationContext(), DB_name);
-                String tablename = table_name();
-                Log.d("listRRR",tableName);
-                float[][] sensorvalues = patientDatabase.retrieveData(tablename);
-                int Axis = axis();
-                Log.d("type", Integer.toString(Axis));
-                Log.d("listRRR", Arrays.toString(sensorvalues[Axis]));
-                float[] temp = sensorvalues[Axis];
-                Log.d("array", Arrays.toString(temp));
-                for(i = 0; i< 10; i++){
-                    float testValue = temp[i];
-                    setGraph(testValue);
-                }
-                flag = true;
-                break;
-
-        }
-    }
-
-    public float[][] retreiveData(String tablename){
-        Log.d("list", "Retreived!");
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sqlSelectQuery = "Select * FROM " + tablename + "ORDER BY timestamp DESC LIMIT 10";
-        float[] xval = new float[10], yval = new float[10], zval = new float[10];
-        int i =0;
-        Cursor cursor = db.rawQuery(sqlSelectQuery, null);
-        if (cursor.moveToFirst()){
-            while (cursor.moveToNext()){
-                String x= cursor.getString(cursor.getColumnIndex("x_values"));
-                String y= cursor.getString(cursor.getColumnIndex("y_values"));
-                String z= cursor.getString(cursor.getColumnIndex("z_values"));
-
-                xval[i] = Float.parseFloat(x);
-                yval[i] = Float.parseFloat(y);
-                zval[i] = Float.parseFloat(z);
-
-                Log.d("listiii", Float.toString(xval[i]));
-                Log.d("listiiii", Float.toString(yval[i]));
-                Log.d("listiiii", Float.toString(zval[i]));
-                i++;
-
-
-            }
-            db.close();
-        }
-        return new float[][]{xval,yval,zval};
-
-    }
-
-    public Thread movingGraph = run(){
-        try{
-            while(run){
-                handler.sendEmptyMessage(0*01);
-                Thread.sleep(1000);
-                synchronized (this){
-                    while(flag){
-                        // wait();
-                    }
-                }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 
